@@ -1,0 +1,5 @@
+Please proceed to this link to get the courses you bought
+
+Order Id: {{ obj.order.id }}
+
+{{ obj.absolute_url }}

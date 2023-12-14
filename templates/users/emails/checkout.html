@@ -1,0 +1,35 @@
+<p>
+    You just bought a course 
+</p>   
+
+
+<div>
+    <p>
+        <b>Items: {{ obj.classes.all|length }} </b>
+    </p>
+    <p>
+        <b>Order Id: {{ obj.id }} </b>
+    </p>
+</div>
+
+<table style="width: 100%; margin-top: 1rem; text-align: center; border-collapse: collapse;" border="1">
+    <thead>
+        <tr>
+            <th style="padding: 12px;">
+                Course name
+            </th>
+            <th style="padding: 12px;">
+                Price
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for class in obj.classes.all %}
+        <tr>
+            <td style="padding: 12px;">{{ class.course.title }}</td>
+            <td style="padding: 12px;">${{ class.course.pricing.price }}</td>
+        </tr>
+        {% endfor %}
+        </tr>
+    </tbody>
+</table>

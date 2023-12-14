@@ -1,0 +1,58 @@
+version: '3.8'
+
+services:
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    networks:
+      mynetwork:
+        aliases:
+          - app.thkee
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: django_web
+    # '/start' is the shell script used to run the service
+    command: ./scripts/start-app.sh
+    # this volume is used to map the files and folders on the host to the container
+    # so if we change code on the host, code in the docker container will also be changed
+    volumes:
+      - .:/app
+    ports:
+      - 8000:8000
+    # env_file is used to manage the env variables of our project
+    env_file:
+      - ./.env
+    links:
+      - redis
+    depends_on:
+      - redis
+    networks:
+      mynetwork:
+        aliases:
+          - app.thkee
+
+  huey:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: django_huey
+    command: ./scripts/start-huey.sh
+    volumes:
+      - .:/app
+    env_file:
+      - ./.env
+    links:
+      - redis
+    depends_on:
+      - web
+    networks:
+      mynetwork:
+        aliases:
+          - app.thkee
+
+networks:
+  mynetwork:
+    driver: bridge
